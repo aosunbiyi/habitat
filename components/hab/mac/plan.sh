@@ -7,6 +7,7 @@ pkg_maintainer="The Habitat Maintainers <humans@habitat.sh>"
 pkg_deps=()
 pkg_build_deps=()
 
+# TODO (CM): this appears to be unused
 nproc() {
   sysctl -n hw.ncpu
 }
@@ -33,21 +34,21 @@ do_prepare() {
   export CARGO_TARGET_DIR="$HAB_CACHE_SRC_PATH/$pkg_dirname"
   build_line "Setting CARGO_TARGET_DIR=$CARGO_TARGET_DIR"
 
-  formulas="$PLAN_CONTEXT/mac/homebrew"
+  la_ldflags="-L/opt/hab-bundle/embedded/lib -lz"
+  la_ldflags="$la_ldflags -L/opt/hab-bundle/embedded/lib -llzma"
+  la_ldflags="$la_ldflags -L/opt/hab-bundle/embedded/lib -lbz2"
+  la_ldflags="$la_ldflags -L/opt/hab-bundle/embedded/lib -lexpat"
+  la_ldflags="$la_ldflags -L/opt/hab-bundle/embedded/lib -liconv"
 
-  la_ldflags="-L$(brew --prefix zlib)/lib -lz"
-  la_ldflags="$la_ldflags -L$(brew --prefix xz)/lib -llzma"
-  la_ldflags="$la_ldflags -L$(brew --prefix bzip2)/lib -lbz2"
-  la_ldflags="$la_ldflags -L$(brew --prefix expat)/lib -lexpat"
-  la_ldflags="$la_ldflags -L$(brew --prefix "$formulas"/hab-libiconv.rb)/lib -liconv"
-
-  export LIBARCHIVE_LIB_DIR=$(brew --prefix "$formulas"/hab-libarchive.rb)/lib
-  export LIBARCHIVE_INCLUDE_DIR=$(brew --prefix "$formulas"/hab-libarchive.rb)/include
+  export LIBARCHIVE_LIB_DIR=/opt/hab-bundle/embedded/lib
+  export LIBARCHIVE_INCLUDE_DIR=/opt/hab-bundle/embedded/include
   export LIBARCHIVE_LDFLAGS="$la_ldflags"
   export LIBARCHIVE_STATIC=true
-  export OPENSSL_LIB_DIR=$(brew --prefix openssl)/lib
-  export OPENSSL_INCLUDE_DIR=$(brew --prefix openssl)/include
+
+  export OPENSSL_LIB_DIR=/opt/hab-bundle/embedded/lib
+  export OPENSSL_INCLUDE_DIR=/opt/hab-bundle/embedded/include
   export OPENSSL_STATIC=true
-  export SODIUM_LIB_DIR=$(brew --prefix libsodium)/lib
+
+  export SODIUM_LIB_DIR=/opt/hab-bundle/embedded/lib
   export SODIUM_STATIC=true
 }
