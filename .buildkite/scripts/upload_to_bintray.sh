@@ -50,7 +50,7 @@ sudo -E HAB_BLDR_CHANNEL="${channel}" \
 source results/last_build.env
 shasum=$(awk '{print $1}' "results/${pkg_artifact:?}.sha256sum")
 cat << EOF | buildkite-agent annotate --style=success --context=bintray-hab
-<h3>Habitat Bintray Binary</h3>
+<h3>Habitat Bintray Binary (${pkg_target:?})</h3>
 Artifact: <code>${pkg_artifact}</code>
 <br/>
 SHA256: <code>${shasum}</code>
@@ -68,7 +68,7 @@ CI_OVERRIDE_CHANNEL="${channel}" \
 # many places :/
 source results/last_image.env
 cat << EOF | buildkite-agent annotate --style=success --context=docker-studio
-<h3>Docker Studio Image</h3>
+<h3>Docker Studio Image (Linux)</h3>
 <ul>
   <li><code>${docker_image:?}:${docker_image_version:?}</code></li>
   <li><code>${docker_image:?}:${docker_image_short_version:?}</code></li>

@@ -12,11 +12,8 @@ channel=$(buildkite-agent meta-data get "release-channel")
 
 echo "--- :habicat: Installing core/hab-bintray-publish from '${channel}' channel"
 sudo hab pkg install \
+     --channel="${channel}" \
      core/hab-bintray-publish
-# TODO (CM): Add --channel=${channel} back once the details of this script
-# get ironed out.
-# --channel="${channel}" \
-
 
 echo "--- :buildkite: Retrieving MacOS core/hab artifact"
 hab_artifact=$(buildkite-agent meta-data get "hab-artifact-macos")
@@ -40,7 +37,7 @@ sudo -E HAB_BLDR_CHANNEL="${channel}" \
 source results/last_build.env
 shasum=$(awk '{print $1}' "results/${pkg_artifact:?}.sha256sum")
 cat << EOF | buildkite-agent annotate --style=success --context=bintray-hab-macos
-<h3>Habitat Bintray Binary (MacOS)</h3>
+<h3>Habitat Bintray Binary (${pkg_target:?})</h3>
 Artifact: <code>${pkg_artifact}</code>
 <br/>
 SHA256: <code>${shasum}</code>
